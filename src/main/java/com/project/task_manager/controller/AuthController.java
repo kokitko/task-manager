@@ -1,8 +1,10 @@
 package com.project.task_manager.controller;
 
+import com.project.task_manager.dto.LoginRequest;
 import com.project.task_manager.dto.RegisterRequest;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.repository.UserRepository;
+import com.project.task_manager.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    @Autowired
+    private JwtUtils jwtUtils;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,5 +44,17 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
+        UserEntity user = userRepository.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+        }
+        String token = jwtUtils.generateToken(user.getUsername());
+        return ResponseEntity.ok(token);
     }
 }
