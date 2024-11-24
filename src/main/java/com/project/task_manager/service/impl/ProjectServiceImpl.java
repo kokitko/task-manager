@@ -1,8 +1,11 @@
 package com.project.task_manager.service.impl;
 
+import com.project.task_manager.dto.ProjectRequestDto;
+import com.project.task_manager.dto.ProjectResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.repository.ProjectRepository;
+import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,32 +14,59 @@ import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
+    private final UserRepository userRepository;
     private ProjectRepository projectRepository;
 
     @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository) {
         this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Project createProject(Project project, UserEntity user) {
+    public ProjectResponseDto createProject(ProjectRequestDto projectRequestDto, UserEntity user) {
+        Project project = mapToProject(projectRequestDto);
         project.setUser(user);
-        return projectRepository.save(project);
+        Project savedProject = projectRepository.save(project);
+        return mapToProjectDto(savedProject);
     }
 
     @Override
-    public List<Project> getProjectsByUser(UserEntity user) {
-        return projectRepository.findByUser(user);
+    public List<ProjectResponseDto> getProjectsByUser(UserEntity user) {
+        List<Project> projects = projectRepository.findByUser(user);
+        return projects.stream().map(this::mapToProjectDto).toList();
     }
 
     @Override
-    public Project updateProject(Long projectId, Project project) {
-        project.setId(projectId);
-        return projectRepository.save(project);
+    public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project) {
+        Project projectToUpdate = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        projectToUpdate.setName(project.getName());
+        projectToUpdate.setDescription(project.getDescription());
+        Project savedProject = projectRepository.save(projectToUpdate);
+        return mapToProjectDto(savedProject);
     }
 
     @Override
     public void deleteProject(Long projectId) {
-        projectRepository.deleteById(projectId);
+        Project projectToDelete = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        projectRepository.delete(projectToDelete);
+    }
+
+    private ProjectResponseDto mapToProjectDto(Project savedProject) {
+        return ProjectResponseDto.builder()
+                .id(savedProject.getId())
+                .name(savedProject.getName())
+                .description(savedProject.getDescription())
+                .userId(savedProject.getUser().getId())
+                .build();
+    }
+
+    private Project mapToProject(ProjectRequestDto projectRequestDto) {
+        return Project.builder()
+                .name(projectRequestDto.getName())
+                .description(projectRequestDto.getDescription())
+                .build();
     }
 }
