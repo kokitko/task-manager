@@ -3,6 +3,7 @@ package com.project.task_manager.controller;
 import com.project.task_manager.dto.LoginRequest;
 import com.project.task_manager.dto.RegisterRequest;
 import com.project.task_manager.entity.UserEntity;
+import com.project.task_manager.repository.RoleRepository;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private JwtUtils jwtUtils;
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthController(JwtUtils jwtUtils, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthController(JwtUtils jwtUtils, RoleRepository roleRepository,
+                          UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.jwtUtils = jwtUtils;
+        this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -40,7 +44,8 @@ public class AuthController {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRole(UserEntity.Role.USER);
+        user.setRole(roleRepository.findByAuthority("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role not found")));
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully");
@@ -54,7 +59,7 @@ public class AuthController {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
         }
-        String token = jwtUtils.generateToken(user.getUsername());
+        String token = jwtUtils.generateToken(user.getUsername(), user.getRole());
         return ResponseEntity.ok(token);
     }
 }
