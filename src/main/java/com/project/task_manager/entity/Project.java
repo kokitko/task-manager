@@ -1,14 +1,16 @@
 package com.project.task_manager.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+
 
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Project {
 
     @Id

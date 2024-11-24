@@ -1,5 +1,7 @@
 package com.project.task_manager.controller;
 
+import com.project.task_manager.dto.ProjectRequestDto;
+import com.project.task_manager.dto.ProjectResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.repository.UserRepository;
@@ -26,23 +28,23 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody Project project,
-                                                 @AuthenticationPrincipal String username) {
+    public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto project,
+                                                            @AuthenticationPrincipal String username) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return ResponseEntity.ok(projectService.createProject(project, user));
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> getUserProjects(@AuthenticationPrincipal String username) {
+    public ResponseEntity<List<ProjectResponseDto>> getUserProjects(@AuthenticationPrincipal String username) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return ResponseEntity.ok(projectService.getProjectsByUser(user));
     }
 
     @PutMapping("/{projectId}")
-    public ResponseEntity<Project> updateProject(@PathVariable Long projectId,
-                                                 @RequestBody Project project) {
+    public ResponseEntity<ProjectResponseDto> updateProject(@PathVariable Long projectId,
+                                                 @RequestBody ProjectRequestDto project) {
         return ResponseEntity.ok(projectService.updateProject(projectId, project));
     }
 
