@@ -8,6 +8,7 @@ import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,9 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project) {
         Project projectToUpdate = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
+        if (!checkIfRequesterIsOwner(projectToUpdate)) {
+            throw new RuntimeException("You are not the owner of this project");
+        }
         projectToUpdate.setName(project.getName());
         projectToUpdate.setDescription(project.getDescription());
         Project savedProject = projectRepository.save(projectToUpdate);
@@ -51,7 +55,9 @@ public class ProjectServiceImpl implements ProjectService {
     public void deleteProject(Long projectId) {
         Project projectToDelete = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-        projectRepository.delete(projectToDelete);
+        if (checkIfRequesterIsOwner(projectToDelete)) {
+            projectRepository.delete(projectToDelete);
+        } else throw new RuntimeException("You are not the owner of this project");
     }
 
     private ProjectResponseDto mapToProjectDto(Project savedProject) {
@@ -68,5 +74,14 @@ public class ProjectServiceImpl implements ProjectService {
                 .name(projectRequestDto.getName())
                 .description(projectRequestDto.getDescription())
                 .build();
+    }
+
+    private boolean checkIfRequesterIsOwner(Project project) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (project.getUser().getUsername().equals(username)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
