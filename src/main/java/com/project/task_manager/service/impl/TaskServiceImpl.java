@@ -8,6 +8,7 @@ import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.TaskRepository;
 import com.project.task_manager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,9 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponseDto createTask(TaskRequestDto taskDto) {
         Project project = projectRepository.findById(taskDto.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-
+        if (!checkIfRequesterIsOwner(project)) {
+            throw new RuntimeException("You are not the owner of this project");
+        }
         Task task = new Task();
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
@@ -44,6 +47,9 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponseDto> getTasksByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
+        if (!checkIfRequesterIsOwner(project)) {
+            throw new RuntimeException("You are not the owner of this project");
+        }
 
         return taskRepository.findByProject(project).stream()
                 .map(this::mapToResponseDto)
@@ -55,6 +61,12 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
+        Project project = projectRepository.findById(taskDto.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        if (!checkIfRequesterIsOwner(project)) {
+            throw new RuntimeException("You are not the owner of this project");
+        }
+
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
         task.setCompleted(taskDto.isCompleted());
@@ -65,6 +77,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTask(Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        if (!checkIfRequesterIsOwner(task.getProject())) {
+            throw new RuntimeException("You are not the owner of this project");
+        }
+
         taskRepository.deleteById(taskId);
     }
 
@@ -76,5 +94,9 @@ public class TaskServiceImpl implements TaskService {
         taskDto.setCompleted(task.isCompleted());
         taskDto.setProjectId(task.getProject().getId());
         return taskDto;
+    }
+
+    private boolean checkIfRequesterIsOwner(Project project) {
+        return project.getUser().getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }
