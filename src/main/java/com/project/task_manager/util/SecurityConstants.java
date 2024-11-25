@@ -10,9 +10,9 @@ import java.security.Key;
 
 @Component
 public class SecurityConstants {
-    @Value("${REMOVED}")
+    @Value("${jwt.secret}")
     private String SECRET_KEY;
-    @Value("${REMOVED}")
+    @Value("${jwt.expiration}")
     protected long EXPIRATION_TIME;
 
     protected Key KEY;
