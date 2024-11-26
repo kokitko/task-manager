@@ -4,6 +4,7 @@ import com.project.task_manager.dto.TaskRequestDto;
 import com.project.task_manager.dto.TaskResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.Task;
+import com.project.task_manager.exception.ProjectNotFoundException;
 import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.TaskRepository;
 import com.project.task_manager.service.TaskService;
@@ -29,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDto createTask(TaskRequestDto taskDto) {
         Project project = projectRepository.findById(taskDto.getProjectId())
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (!checkIfRequesterIsOwner(project)) {
             throw new RuntimeException("You are not the owner of this project");
         }
@@ -46,7 +47,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponseDto> getTasksByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (!checkIfRequesterIsOwner(project)) {
             throw new RuntimeException("You are not the owner of this project");
         }
@@ -62,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
         Project project = projectRepository.findById(taskDto.getProjectId())
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (!checkIfRequesterIsOwner(project)) {
             throw new RuntimeException("You are not the owner of this project");
         }
