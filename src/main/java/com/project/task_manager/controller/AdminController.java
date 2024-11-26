@@ -45,13 +45,13 @@ public class AdminController {
     public ResponseEntity<ProjectResponseDto> updateProject(@PathVariable("userId") Long userId,
                                                             @PathVariable("projectId") Long projectId,
                                                             @RequestBody ProjectRequestDto project) {
-        return ResponseEntity.ok(adminService.updateProject(projectId, project));
+        return ResponseEntity.ok(adminService.updateProject(projectId, project, userId));
     }
 
     @DeleteMapping("/user/{userId}/projects/{projectId}")
     public ResponseEntity<Void> deleteProject(@PathVariable("userId") Long userId,
                                               @PathVariable("projectId") Long projectId) {
-        adminService.deleteProject(projectId);
+        adminService.deleteProject(projectId, userId);
         return ResponseEntity.noContent().build();
     }
 }

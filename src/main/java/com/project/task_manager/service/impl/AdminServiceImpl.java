@@ -4,6 +4,7 @@ import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
+import com.project.task_manager.exception.BelongingException;
 import com.project.task_manager.exception.ProjectNotFoundException;
 import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.service.AdminService;
@@ -42,9 +43,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto projectDto) {
+    public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto projectDto, Long userId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+        if (!project.getUser().getId().equals(userId)) {
+            throw new BelongingException("This project does not belong to the submitted user");
+        }
         project.setName(projectDto.getName());
         project.setDescription(projectDto.getDescription());
 
@@ -53,9 +57,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteProject(Long projectId) {
+    public void deleteProject(Long projectId, Long userId) {
         Project project = projectRepository.findById(projectId).orElseThrow(()
                 -> new ProjectNotFoundException("Project not found"));
+        if (!project.getUser().getId().equals(userId)) {
+            throw new BelongingException("This project does not belong to the submitted user");
+        }
         projectRepository.delete(project);
     }
 

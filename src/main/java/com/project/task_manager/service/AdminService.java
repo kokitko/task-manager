@@ -10,6 +10,6 @@ public interface AdminService {
 
     ProjectResponseDto createProject(ProjectRequestDto project, UserEntity user);
     List<ProjectResponseDto> getProjectsByUser(UserEntity user);
-    ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project);
-    void deleteProject(Long projectId);
+    ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project, Long userId);
+    void deleteProject(Long projectId, Long userId);
 }
