@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.naming.NoPermissionException;
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 
 @ControllerAdvice
@@ -30,5 +32,16 @@ public class GlobalExceptionHandler {
         errorObject.setTimestamp(new Date());
 
         return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserIsNotOwnerException.class)
+    public ResponseEntity<ErrorObject> handleUserIsNotOwnerException() {
+        ErrorObject errorObject = new ErrorObject();
+
+        errorObject.setStatusCode(403);
+        errorObject.setMessage("You can not work with this project/task");
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.FORBIDDEN);
     }
 }
