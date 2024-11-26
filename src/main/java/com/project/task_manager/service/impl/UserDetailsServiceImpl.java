@@ -1,4 +1,4 @@
-package com.project.task_manager.service;
+package com.project.task_manager.service.impl;
 
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.repository.UserRepository;
