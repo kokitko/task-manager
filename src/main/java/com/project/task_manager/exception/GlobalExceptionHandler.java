@@ -55,4 +55,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(BelongingException.class)
+    public ResponseEntity<ErrorObject> handleBelongingException() {
+        ErrorObject errorObject = new ErrorObject();
+
+        errorObject.setStatusCode(403);
+        errorObject.setMessage("This task/project does not belong to this project/user");
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.FORBIDDEN);
+    }
 }
