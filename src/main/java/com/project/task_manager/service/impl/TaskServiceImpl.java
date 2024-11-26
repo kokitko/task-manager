@@ -30,8 +30,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponseDto createTask(TaskRequestDto taskDto) {
-        Project project = projectRepository.findById(taskDto.getProjectId())
+    public TaskResponseDto createTask(TaskRequestDto taskDto, Long projectId) {
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (!checkIfRequesterIsOwner(project)) {
             throw new UserIsNotOwnerException("You are not the owner of this project");
@@ -60,11 +60,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponseDto updateTask(Long taskId, TaskRequestDto taskDto) {
+    public TaskResponseDto updateTask(Long taskId, TaskRequestDto taskDto, Long projectId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
-        Project project = projectRepository.findById(taskDto.getProjectId())
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (!checkIfRequesterIsOwner(project)) {
             throw new UserIsNotOwnerException("You are not the owner of this project");
@@ -79,7 +79,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(Long taskId) {
+    public void deleteTask(Long taskId, Long projectId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
         if (!checkIfRequesterIsOwner(task.getProject())) {

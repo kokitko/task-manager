@@ -7,5 +7,4 @@ public class TaskRequestDto {
     private String name;
     private String description;
     private boolean completed;
-    private Long projectId;
 }
