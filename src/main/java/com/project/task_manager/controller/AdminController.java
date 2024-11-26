@@ -2,6 +2,8 @@ package com.project.task_manager.controller;
 
 import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
+import com.project.task_manager.dto.TaskRequestDto;
+import com.project.task_manager.dto.TaskResponseDto;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.exception.UserNotFoundException;
 import com.project.task_manager.repository.UserRepository;
