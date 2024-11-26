@@ -1,6 +1,6 @@
 package com.project.task_manager.config;
 
-import com.project.task_manager.service.UserDetailsServiceImpl;
+import com.project.task_manager.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
