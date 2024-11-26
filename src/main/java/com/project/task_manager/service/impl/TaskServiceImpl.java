@@ -5,6 +5,7 @@ import com.project.task_manager.dto.TaskResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.Task;
 import com.project.task_manager.exception.ProjectNotFoundException;
+import com.project.task_manager.exception.TaskNotFoundException;
 import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.TaskRepository;
 import com.project.task_manager.service.TaskService;
@@ -60,7 +61,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDto updateTask(Long taskId, TaskRequestDto taskDto) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
         Project project = projectRepository.findById(taskDto.getProjectId())
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -79,7 +80,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long taskId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
         if (!checkIfRequesterIsOwner(task.getProject())) {
             throw new RuntimeException("You are not the owner of this project");
         }
