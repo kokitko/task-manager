@@ -3,6 +3,7 @@ package com.project.task_manager.controller;
 import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
 import com.project.task_manager.entity.UserEntity;
+import com.project.task_manager.exception.UserNotFoundException;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,14 @@ public class AdminController {
     public ResponseEntity<ProjectResponseDto> createProject(@PathVariable("userId") Long userId,
                                                             @RequestBody ProjectRequestDto project) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         return ResponseEntity.ok(adminService.createProject(project, user));
     }
 
     @GetMapping("/user/{userId}/projects")
     public ResponseEntity<List<ProjectResponseDto>> getProjectsByUser(@PathVariable("userId") Long userId) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         return ResponseEntity.ok(adminService.getProjectsByUser(user));
     }
 

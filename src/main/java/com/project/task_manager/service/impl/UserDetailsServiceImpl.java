@@ -1,6 +1,7 @@
 package com.project.task_manager.service.impl;
 
 import com.project.task_manager.entity.UserEntity;
+import com.project.task_manager.exception.UserNotFoundException;
 import com.project.task_manager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -21,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("User not found"));
+                () -> new UserNotFoundException("User not found"));
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
