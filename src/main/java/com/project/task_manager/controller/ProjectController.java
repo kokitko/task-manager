@@ -4,11 +4,13 @@ import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
+import com.project.task_manager.exception.UserNotFoundException;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,14 +33,14 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto project,
                                                             @AuthenticationPrincipal String username) {
         UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         return ResponseEntity.ok(projectService.createProject(project, user));
     }
 
     @GetMapping
     public ResponseEntity<List<ProjectResponseDto>> getUserProjects(@AuthenticationPrincipal String username) {
         UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         return ResponseEntity.ok(projectService.getProjectsByUser(user));
     }
 

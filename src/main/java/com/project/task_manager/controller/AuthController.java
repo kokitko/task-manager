@@ -3,6 +3,7 @@ package com.project.task_manager.controller;
 import com.project.task_manager.dto.LoginRequest;
 import com.project.task_manager.dto.RegisterRequest;
 import com.project.task_manager.entity.UserEntity;
+import com.project.task_manager.exception.UserNotFoundException;
 import com.project.task_manager.repository.RoleRepository;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.util.JwtUtils;
@@ -46,7 +47,7 @@ public class AuthController {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setRole(roleRepository.findByAuthority("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role not found")));
+                .orElseThrow(() -> new RuntimeException("Role not found")));  // not handling because roles are initialized so it is never going to be thrown
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully");
@@ -55,7 +56,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
         UserEntity user = userRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
