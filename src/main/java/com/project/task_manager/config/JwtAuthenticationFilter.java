@@ -1,5 +1,6 @@
 package com.project.task_manager.config;
 
+import com.project.task_manager.service.impl.UserDetailsServiceImpl;
 import com.project.task_manager.util.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,47 +20,43 @@ import java.util.Collections;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JwtUtils jwtUtils;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
+    private UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String requestPath = request.getRequestURI();
-        if(requestPath.startsWith("/api/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        String jwt = getJwtFromRequest(request);
 
-        String header = request.getHeader("Authorization");
+        String username = null;
+        SimpleGrantedAuthority role = null;
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            String username = null;
+        if (jwt != null && jwtUtils.validateToken(jwt)) {
             try {
-                username = jwtUtils.extractUsername(token);
+                username = jwtUtils.extractUsername(jwt);
+                role = new SimpleGrantedAuthority(jwtUtils.extractRole(jwt));
             } catch (Exception e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
-                return;
             }
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken
+                    (username, null, Collections.singletonList(role));
 
-            if (jwtUtils.validateToken(token)) {
-                String role = jwtUtils.extractRole(token);
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(username, null,
-                                Collections.singletonList(authority));
+            authToken.setDetails(userDetailsService.loadUserByUsername(username));
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-            filterChain.doFilter(request, response);
+            SecurityContextHolder.getContext().setAuthentication(authToken);
         }
+        filterChain.doFilter(request, response);
+    }
+
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }
