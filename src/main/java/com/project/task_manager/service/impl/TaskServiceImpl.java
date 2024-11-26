@@ -90,12 +90,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private TaskResponseDto mapToResponseDto(Task task) {
-        TaskResponseDto taskDto = new TaskResponseDto();
-        taskDto.setId(task.getId());
-        taskDto.setName(task.getName());
-        taskDto.setDescription(task.getDescription());
-        taskDto.setCompleted(task.isCompleted());
-        taskDto.setProjectId(task.getProject().getId());
+        TaskResponseDto taskDto = TaskResponseDto.builder()
+                .id(task.getId())
+                .name(task.getName())
+                .description(task.getDescription())
+                .completed(task.isCompleted())
+                .projectId(task.getProject().getId())
+                .build();
         return taskDto;
     }
 

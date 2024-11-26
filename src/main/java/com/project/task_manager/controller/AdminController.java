@@ -56,4 +56,33 @@ public class AdminController {
         adminService.deleteProject(projectId, userId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/user/{userId}/projects/{projectId}/tasks")
+    public ResponseEntity<TaskResponseDto> createTask(@PathVariable("userId") Long userId,
+                                                      @PathVariable("projectId") Long projectId,
+                                                      @RequestBody TaskRequestDto task) {
+        return ResponseEntity.ok(adminService.createTask(task, projectId, userId));
+    }
+
+    @GetMapping("/user/{userId}/projects/{projectId}/tasks")
+    public ResponseEntity<List<TaskResponseDto>> getTasksByProject(@PathVariable("userId") Long userId,
+                                                                   @PathVariable("projectId") Long projectId) {
+        return ResponseEntity.ok(adminService.getTasksByProject(projectId, userId));
+    }
+
+    @PutMapping("/user/{userId}/projects/{projectId}/tasks/{taskId}")
+    public ResponseEntity<TaskResponseDto> updateTask(@PathVariable("userId") Long userId,
+                                                      @PathVariable("projectId") Long projectId,
+                                                      @PathVariable("taskId") Long taskId,
+                                                      @RequestBody TaskRequestDto task) {
+        return ResponseEntity.ok(adminService.updateTask(taskId, task, projectId, userId));
+    }
+
+    @DeleteMapping("/user/{userId}/projects/{projectId}/tasks/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable("userId") Long userId,
+                                           @PathVariable("projectId") Long projectId,
+                                           @PathVariable("taskId") Long taskId) {
+        adminService.deleteTask(taskId, projectId, userId);
+        return ResponseEntity.noContent().build();
+    }
 }
