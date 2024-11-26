@@ -4,6 +4,7 @@ import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
+import com.project.task_manager.exception.ProjectNotFoundException;
 import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.ProjectService;
@@ -41,7 +42,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project) {
         Project projectToUpdate = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (!checkIfRequesterIsOwner(projectToUpdate)) {
             throw new RuntimeException("You are not the owner of this project");
         }
@@ -54,7 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProject(Long projectId) {
         Project projectToDelete = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (checkIfRequesterIsOwner(projectToDelete)) {
             projectRepository.delete(projectToDelete);
         } else throw new RuntimeException("You are not the owner of this project");
