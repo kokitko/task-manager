@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -77,5 +78,30 @@ public class ProjectRepositoryTest {
 
         Assertions.assertThat(project).isNotNull();
         Assertions.assertThat(project.getId()).isEqualTo(project1.getId());
+    }
+
+    @Test
+    public void ProjectRepository_UpdateProject_ReturnsProject() {
+        Project savedProject = projectRepository.save(project1);
+
+        savedProject.setName("updatedname");
+        savedProject.setDescription("updateddescription");
+
+        Project updatedProject = projectRepository.save(savedProject);
+
+        Assertions.assertThat(updatedProject).isNotNull();
+        Assertions.assertThat(updatedProject.getId()).isEqualTo(savedProject.getId());
+        Assertions.assertThat(updatedProject.getName()).isEqualTo("updatedname");
+        Assertions.assertThat(updatedProject.getDescription()).isEqualTo("updateddescription");
+    }
+
+    @Test
+    public void ProjectRepository_DeleteProject_ReturnsNull() {
+        Project savedProject = projectRepository.save(project1);
+
+        projectRepository.deleteById(savedProject.getId());
+
+        Optional<Project> deletedProject = projectRepository.findById(savedProject.getId());
+        Assertions.assertThat(deletedProject).isEmpty();
     }
 }
