@@ -78,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .build();
     }
 
-    private boolean checkIfRequesterIsOwner(Project project) {
+    public boolean checkIfRequesterIsOwner(Project project) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         if (project.getUser().getUsername().equals(username)) {
             return true;
