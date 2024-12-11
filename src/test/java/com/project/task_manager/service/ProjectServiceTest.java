@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,10 +52,6 @@ public class ProjectServiceTest {
         project.setName("testproject");
         project.setDescription("testdescription");
         project.setUser(user);
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn(user.getUsername());
-        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
@@ -76,9 +73,24 @@ public class ProjectServiceTest {
     @Test
     public void ProjectService_UpdateProject_ReturnsProjectResponseDto() {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
+        // Mocking the SecurityContextHolder to return the user's username
         when(projectRepository.save(Mockito.any(Project.class))).thenReturn(project);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(user.getUsername());
+        SecurityContextHolder.setContext(securityContext);
 
         ProjectResponseDto response = projectService.updateProject(project.getId(), projectRequestDto);
         Assertions.assertThat(response.getName()).isEqualTo(projectRequestDto.getName());
+    }
+
+    @Test
+    public void ProjectService_DeleteProject_ReturnsVoid() {
+        when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(project));
+        // Mocking the SecurityContextHolder to return the user's username
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(user.getUsername());
+        SecurityContextHolder.setContext(securityContext);
+
+        assertAll(() -> projectService.deleteProject(project.getId()));
     }
 }
