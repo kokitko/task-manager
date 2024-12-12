@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,15 +64,16 @@ public class TaskServiceTest {
         task.setDescription("testdescription");
         task.setCompleted(true);
         task.setProject(project);
+
+        // Add code to mock the authentication object
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(user.getUsername());
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
     public void TaskService_CreateTask_ReturnsTaskResponseDto() {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
-        // Add code to mock the authentication object
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn(user.getUsername());
-        SecurityContextHolder.setContext(securityContext);
 
         when(taskRepository.save(Mockito.any(Task.class))).thenReturn(task);
 
@@ -82,14 +84,28 @@ public class TaskServiceTest {
     @Test
     public void TaskService_GetTasksByProjectId_ReturnsTaskResponseDtoList() {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
-        // Add code to mock the authentication object
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn(user.getUsername());
-        SecurityContextHolder.setContext(securityContext);
 
         when(taskRepository.findByProject(Mockito.any(Project.class))).thenReturn(List.of(task));
 
         List<TaskResponseDto> list = taskService.getTasksByProjectId(project.getId());
         Assertions.assertThat(list.get(0).getName()).isEqualTo(task.getName());
+    }
+
+    @Test
+    public void TaskService_UpdateTask_ReturnsTaskResponseDto() {
+        when(taskRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(task));
+        when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
+
+        when(taskRepository.save(Mockito.any(Task.class))).thenReturn(task);
+
+        TaskResponseDto response = taskService.updateTask(task.getId(), taskRequestDto, project.getId());
+        Assertions.assertThat(response.getName()).isEqualTo(taskRequestDto.getName());
+    }
+
+    @Test
+    public void TaskService_DeleteTask_ReturnsVoid() {
+        when(taskRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(task));
+
+        assertAll(() -> taskService.deleteTask(task.getId(), project.getId()));
     }
 }
