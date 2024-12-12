@@ -73,8 +73,8 @@ public class ProjectServiceTest {
     @Test
     public void ProjectService_UpdateProject_ReturnsProjectResponseDto() {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
-        // Mocking the SecurityContextHolder to return the user's username
         when(projectRepository.save(Mockito.any(Project.class))).thenReturn(project);
+        // Mocking the SecurityContextHolder to return the user's username
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn(user.getUsername());
         SecurityContextHolder.setContext(securityContext);
