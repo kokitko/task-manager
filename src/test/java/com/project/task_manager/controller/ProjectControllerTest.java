@@ -8,6 +8,7 @@ import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -90,5 +92,27 @@ public class ProjectControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(projectResponseDto.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(projectResponseDto.getName()));
+    }
+
+    @Test
+    public void ProjectController_UpdateProject_ReturnsProjectResponseDto() throws Exception {
+        when(projectService.updateProject(Mockito.anyLong(), Mockito.any(ProjectRequestDto.class)))
+                .thenReturn(projectResponseDto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/projects/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(projectRequestDto)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(projectResponseDto.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(projectResponseDto.getName()));
+    }
+
+    @Test
+    public void ProjectController_DeleteProject_ReturnsString() throws Exception {
+        doNothing().when(projectService).deleteProject(Mockito.anyLong());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/projects/1")
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }
