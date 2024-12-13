@@ -1,7 +1,6 @@
 package com.project.task_manager.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.TaskRequestDto;
 import com.project.task_manager.dto.TaskResponseDto;
 import com.project.task_manager.entity.Project;
@@ -14,16 +13,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -81,5 +78,26 @@ public class TaskControllerTest {
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("testtaskresponse"));
+    }
+
+    @Test
+    public void TaskController_UpdateTask_ReturnsTaskResponseDto() throws Exception {
+        when(taskService.updateTask(any(Long.class),any(TaskRequestDto.class),
+                any(Long.class))).thenReturn(taskResponseDto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/project/1/task/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(taskRequestDto)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testtaskresponse"));
+    }
+
+    @Test
+    public void TaskController_DeleteTask_ReturnsNoContent() throws Exception {
+        doNothing().when(taskService).deleteTask(any(Long.class), any(Long.class));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/project/1/task/1")
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }
