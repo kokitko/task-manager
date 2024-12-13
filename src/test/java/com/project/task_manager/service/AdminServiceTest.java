@@ -3,6 +3,7 @@ package com.project.task_manager.service;
 import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
 import com.project.task_manager.dto.TaskRequestDto;
+import com.project.task_manager.dto.TaskResponseDto;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.Task;
 import com.project.task_manager.entity.UserEntity;
@@ -94,5 +95,42 @@ public class AdminServiceTest {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
 
         assertAll(() -> adminService.deleteProject(project.getId(), user.getId()));
+    }
+
+    @Test
+    public void AdminService_CreateTask_ReturnsTaskResponseDto() {
+        when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
+        when(taskRepository.save(Mockito.any(Task.class))).thenReturn(task);
+
+        TaskResponseDto taskResponseDto = adminService.createTask(taskRequestDto, project.getId(), user.getId());
+        Assertions.assertThat(taskResponseDto.getName()).isEqualTo(task.getName());
+    }
+
+    @Test
+    public void AdminService_GetTasksByProject_ReturnsTaskResponseDtoList() {
+        when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
+        when(taskRepository.findByProject(Mockito.any(Project.class))).thenReturn(List.of(task));
+
+        List<TaskResponseDto> taskResponseDtoList = adminService.getTasksByProject(project.getId(), user.getId());
+        Assertions.assertThat(taskResponseDtoList).hasSize(1);
+    }
+
+    @Test
+    public void AdminService_UpdateTask_ReturnsTaskResponseDto() {
+        when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
+        when(taskRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(task));
+        when(taskRepository.save(Mockito.any(Task.class))).thenReturn(task);
+
+        TaskResponseDto taskResponseDto = adminService.updateTask
+                (task.getId(), taskRequestDto, project.getId(), user.getId());
+        Assertions.assertThat(taskResponseDto.getName()).isEqualTo(task.getName());
+    }
+
+    @Test
+    public void AdminService_DeleteTask_ReturnsVoid() {
+        when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
+        when(taskRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(task));
+
+        assertAll(() -> adminService.deleteTask(task.getId(), project.getId(), user.getId()));
     }
 }
