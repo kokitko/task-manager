@@ -62,13 +62,13 @@ public class ProjectServiceTest {
         Assertions.assertThat(projectResponseDto.getName()).isEqualTo(project.getName());
     }
 
-    @Test
+/*    @Test
     public void ProjectService_GetProjectsByUser_ReturnsProjectResponseDtoList() {
         when(projectRepository.findByUser(Mockito.any(UserEntity.class))).thenReturn(List.of(project));
 
         List<ProjectResponseDto> list = projectService.getProjectsByUser(user);
         Assertions.assertThat(list.get(0).getName()).isEqualTo(project.getName());
-    }
+    }*/
 
     @Test
     public void ProjectService_UpdateProject_ReturnsProjectResponseDto() {

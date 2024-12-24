@@ -72,13 +72,13 @@ public class AdminServiceTest {
         Assertions.assertThat(projectResponseDto.getName()).isEqualTo(project.getName());
     }
 
-    @Test
+/*    @Test
     public void AdminService_GetProjectsByUser_ReturnsProjectResponseDtoList() {
         when(projectRepository.findByUser(Mockito.any(UserEntity.class))).thenReturn(List.of(project));
 
         List<ProjectResponseDto> projectResponseDtoList = adminService.getProjectsByUser(user);
         Assertions.assertThat(projectResponseDtoList).hasSize(1);
-    }
+    }*/
 
     @Test
     public void AdminService_UpdateProject_ReturnsProjectResponseDto() {

@@ -1,9 +1,6 @@
 package com.project.task_manager.service;
 
-import com.project.task_manager.dto.ProjectRequestDto;
-import com.project.task_manager.dto.ProjectResponseDto;
-import com.project.task_manager.dto.TaskRequestDto;
-import com.project.task_manager.dto.TaskResponseDto;
+import com.project.task_manager.dto.*;
 import com.project.task_manager.entity.UserEntity;
 
 import java.util.List;
@@ -11,7 +8,7 @@ import java.util.List;
 public interface AdminService {
 
     ProjectResponseDto createProject(ProjectRequestDto project, UserEntity user);
-    List<ProjectResponseDto> getProjectsByUser(UserEntity user);
+    ProjectResponsePage getProjectsByUser(UserEntity user, int  page, int size);
     ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project, Long userId);
     void deleteProject(Long projectId, Long userId);
 

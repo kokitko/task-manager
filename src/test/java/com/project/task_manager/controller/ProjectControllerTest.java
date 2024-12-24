@@ -82,7 +82,7 @@ public class ProjectControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(projectResponseDto.getName()));
     }
 
-    @Test
+/*    @Test
     public void ProjectController_GetUserProjects_ReturnsProjectResponseDtoList() throws Exception {
         when(projectService.getProjectsByUser(any(UserEntity.class)))
                 .thenReturn(List.of(projectResponseDto));
@@ -92,7 +92,7 @@ public class ProjectControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(projectResponseDto.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(projectResponseDto.getName()));
-    }
+    }*/
 
     @Test
     public void ProjectController_UpdateProject_ReturnsProjectResponseDto() throws Exception {

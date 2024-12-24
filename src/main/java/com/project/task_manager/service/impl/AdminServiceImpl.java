@@ -1,9 +1,6 @@
 package com.project.task_manager.service.impl;
 
-import com.project.task_manager.dto.ProjectRequestDto;
-import com.project.task_manager.dto.ProjectResponseDto;
-import com.project.task_manager.dto.TaskRequestDto;
-import com.project.task_manager.dto.TaskResponseDto;
+import com.project.task_manager.dto.*;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.Task;
 import com.project.task_manager.entity.UserEntity;
@@ -13,6 +10,8 @@ import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.TaskRepository;
 import com.project.task_manager.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,11 +40,19 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<ProjectResponseDto> getProjectsByUser(UserEntity user) {
-        List<Project> projects = projectRepository.findByUser(user);
-        return projects.stream()
-                .map(this::mapToProjectDto)
-                .toList();
+    public ProjectResponsePage getProjectsByUser(UserEntity user, int page, int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<Project> projects = projectRepository.findByUser(user, pageable);
+        List<ProjectResponseDto> projectResponseDtos = projects.stream().map(this::mapToProjectDto).toList();
+
+        ProjectResponsePage projectResponsePage = new ProjectResponsePage();
+        projectResponsePage.setPage(projects.getNumber());
+        projectResponsePage.setSize(projects.getSize());
+        projectResponsePage.setTotalPages(projects.getTotalPages());
+        projectResponsePage.setTotalElements(projects.getTotalElements());
+        projectResponsePage.setLast(projects.isLast());
+        projectResponsePage.setProjects(projectResponseDtos);
+        return projectResponsePage;
     }
 
     @Override

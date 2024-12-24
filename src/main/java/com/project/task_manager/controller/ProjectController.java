@@ -2,6 +2,7 @@ package com.project.task_manager.controller;
 
 import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
+import com.project.task_manager.dto.ProjectResponsePage;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.exception.UserNotFoundException;
 import com.project.task_manager.repository.UserRepository;
@@ -35,10 +36,13 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponseDto>> getUserProjects(@AuthenticationPrincipal String username) {
+    public ResponseEntity<ProjectResponsePage> getUserProjects(
+            @AuthenticationPrincipal String username,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        return ResponseEntity.ok(projectService.getProjectsByUser(user));
+        return ResponseEntity.ok(projectService.getProjectsByUser(user, page, size));
     }
 
     @PutMapping("/{projectId}")

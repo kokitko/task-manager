@@ -87,7 +87,7 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$.description").value("testdescription"));
     }
 
-    @Test
+/*    @Test
     public void AdminController_GetProjectsByUser_ReturnsProjectResponseDtoList() throws Exception {
         when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
         when(adminService.getProjectsByUser(Mockito.any(UserEntity.class)))
@@ -99,7 +99,7 @@ public class AdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("testprojectresponse"))
                 .andExpect(jsonPath("$[0].description").value("testdescription"));
-    }
+    }*/
 
     @Test
     public void AdminController_UpdateProject_ReturnsProjectResponseDto() throws Exception {

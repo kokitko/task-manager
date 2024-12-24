@@ -1,9 +1,6 @@
 package com.project.task_manager.controller;
 
-import com.project.task_manager.dto.ProjectRequestDto;
-import com.project.task_manager.dto.ProjectResponseDto;
-import com.project.task_manager.dto.TaskRequestDto;
-import com.project.task_manager.dto.TaskResponseDto;
+import com.project.task_manager.dto.*;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.exception.UserNotFoundException;
 import com.project.task_manager.repository.UserRepository;
@@ -37,10 +34,13 @@ public class AdminController {
     }
 
     @GetMapping("/user/{userId}/projects")
-    public ResponseEntity<List<ProjectResponseDto>> getProjectsByUser(@PathVariable("userId") Long userId) {
+    public ResponseEntity<ProjectResponsePage> getProjectsByUser(
+            @PathVariable("userId") Long userId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        return ResponseEntity.ok(adminService.getProjectsByUser(user));
+        return ResponseEntity.ok(adminService.getProjectsByUser(user, page, size));
     }
 
     @PutMapping("/user/{userId}/projects/{projectId}")

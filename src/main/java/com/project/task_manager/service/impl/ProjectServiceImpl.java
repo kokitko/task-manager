@@ -2,6 +2,7 @@ package com.project.task_manager.service.impl;
 
 import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
+import com.project.task_manager.dto.ProjectResponsePage;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.exception.ProjectNotFoundException;
@@ -10,10 +11,13 @@ import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -35,9 +39,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectResponseDto> getProjectsByUser(UserEntity user) {
-        List<Project> projects = projectRepository.findByUser(user);
-        return projects.stream().map(this::mapToProjectDto).toList();
+    public ProjectResponsePage getProjectsByUser(UserEntity user, int page, int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<Project> projectsPage = projectRepository.findByUser(user, pageable);
+        List<ProjectResponseDto> projects = projectsPage.stream().map(this::mapToProjectDto).toList();
+
+        ProjectResponsePage projectResponsePage = new ProjectResponsePage();
+        projectResponsePage.setPage(projectsPage.getNumber());
+        projectResponsePage.setSize(projectsPage.getSize());
+        projectResponsePage.setTotalPages(projectsPage.getTotalPages());
+        projectResponsePage.setTotalElements(projectsPage.getTotalElements());
+        projectResponsePage.setLast(projectsPage.isLast());
+        projectResponsePage.setProjects(projects);
+        return projectResponsePage;
     }
 
     @Override
