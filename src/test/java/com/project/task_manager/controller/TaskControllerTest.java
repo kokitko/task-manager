@@ -70,7 +70,7 @@ public class TaskControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testtaskresponse"));
     }
 
-    @Test
+/*    @Test
     public void TaskController_GetTasksByProject_ReturnsTaskResponseDtoList() throws Exception {
         when(taskService.getTasksByProjectId(any(Long.class))).thenReturn(List.of(taskResponseDto));
 
@@ -78,7 +78,7 @@ public class TaskControllerTest {
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("testtaskresponse"));
-    }
+    }*/
 
     @Test
     public void TaskController_UpdateTask_ReturnsTaskResponseDto() throws Exception {

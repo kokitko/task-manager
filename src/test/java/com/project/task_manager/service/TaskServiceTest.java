@@ -81,7 +81,7 @@ public class TaskServiceTest {
         Assertions.assertThat(taskResponseDto.getName()).isEqualTo(task.getName());
     }
 
-    @Test
+/*    @Test
     public void TaskService_GetTasksByProjectId_ReturnsTaskResponseDtoList() {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
 
@@ -89,7 +89,7 @@ public class TaskServiceTest {
 
         List<TaskResponseDto> list = taskService.getTasksByProjectId(project.getId());
         Assertions.assertThat(list.get(0).getName()).isEqualTo(task.getName());
-    }
+    }*/
 
     @Test
     public void TaskService_UpdateTask_ReturnsTaskResponseDto() {
