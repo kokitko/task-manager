@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ProjectService {
     ProjectResponseDto createProject(ProjectRequestDto project, UserEntity user);
+    ProjectResponseDto getProjectById(Long projectId);
     ProjectResponsePage getProjectsByUser(UserEntity user, int page, int size);
     ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project);
     void deleteProject(Long projectId);

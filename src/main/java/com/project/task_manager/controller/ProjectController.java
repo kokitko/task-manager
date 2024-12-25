@@ -27,6 +27,11 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectResponseDto> getProject(@PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getProjectById(projectId));
+    }
+
     @PostMapping
     public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto project,
                                                             @AuthenticationPrincipal String username) {
@@ -39,7 +44,7 @@ public class ProjectController {
     public ResponseEntity<ProjectResponsePage> getUserProjects(
             @AuthenticationPrincipal String username,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "6") int size) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         return ResponseEntity.ok(projectService.getProjectsByUser(user, page, size));

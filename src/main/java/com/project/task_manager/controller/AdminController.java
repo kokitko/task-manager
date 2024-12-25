@@ -37,7 +37,7 @@ public class AdminController {
     public ResponseEntity<ProjectResponsePage> getProjectsByUser(
             @PathVariable("userId") Long userId,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size) {
+            @RequestParam(value = "size", defaultValue = "6") int size) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         return ResponseEntity.ok(adminService.getProjectsByUser(user, page, size));

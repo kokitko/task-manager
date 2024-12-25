@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -39,10 +38,24 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectResponseDto getProjectById(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+        if (!checkIfRequesterIsOwner(project)) {
+            throw new UserIsNotOwnerException("You are not the owner of this project");
+        }
+        return mapToProjectDto(project);
+    }
+
+    @Override
     public ProjectResponsePage getProjectsByUser(UserEntity user, int page, int size) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<Project> projectsPage = projectRepository.findByUser(user, pageable);
         List<ProjectResponseDto> projects = projectsPage.stream().map(this::mapToProjectDto).toList();
+
+        if (!checkIfRequesterIsOwner(projectsPage.getContent().get(0))) {
+            throw new UserIsNotOwnerException("You are not the owner of those projects");
+        }
 
         ProjectResponsePage projectResponsePage = new ProjectResponsePage();
         projectResponsePage.setPage(projectsPage.getNumber());
