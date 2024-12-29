@@ -53,10 +53,6 @@ public class ProjectServiceImpl implements ProjectService {
         Page<Project> projectsPage = projectRepository.findByUser(user, pageable);
         List<ProjectResponseDto> projects = projectsPage.stream().map(this::mapToProjectDto).toList();
 
-        if (!checkIfRequesterIsOwner(projectsPage.getContent().get(0))) {
-            throw new UserIsNotOwnerException("You are not the owner of those projects");
-        }
-
         ProjectResponsePage projectResponsePage = new ProjectResponsePage();
         projectResponsePage.setPage(projectsPage.getNumber());
         projectResponsePage.setSize(projectsPage.getSize());

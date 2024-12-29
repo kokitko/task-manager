@@ -25,6 +25,13 @@ public class AdminController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<UserResponsePage> getUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "6") int size) {
+        return ResponseEntity.ok(adminService.getUsers(page, size));
+    }
+
     @PostMapping("/user/{userId}/projects")
     public ResponseEntity<ProjectResponseDto> createProject(@PathVariable("userId") Long userId,
                                                             @RequestBody ProjectRequestDto project) {

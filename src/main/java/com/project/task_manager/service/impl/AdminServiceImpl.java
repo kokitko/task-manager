@@ -8,6 +8,7 @@ import com.project.task_manager.exception.BelongingException;
 import com.project.task_manager.exception.ProjectNotFoundException;
 import com.project.task_manager.repository.ProjectRepository;
 import com.project.task_manager.repository.TaskRepository;
+import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,31 @@ import java.util.List;
 @Service
 public class AdminServiceImpl implements AdminService {
 
+    private final UserRepository userRepository;
     private ProjectRepository projectRepository;
     private TaskRepository taskRepository;
 
     @Autowired
-    public AdminServiceImpl(ProjectRepository projectRepository, TaskRepository taskRepository) {
+    public AdminServiceImpl(ProjectRepository projectRepository, TaskRepository taskRepository, UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserResponsePage getUsers(int page, int size) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<UserEntity> users = userRepository.findAll(pageable);
+        List<UserInfoResponse> userEntities = users.stream().map(this::mapToUserDto).toList();
+
+        UserResponsePage userResponsePage = new UserResponsePage();
+        userResponsePage.setPage(users.getNumber());
+        userResponsePage.setSize(users.getSize());
+        userResponsePage.setTotalPages(users.getTotalPages());
+        userResponsePage.setTotalElements(users.getTotalElements());
+        userResponsePage.setLast(users.isLast());
+        userResponsePage.setUsers(userEntities);
+        return userResponsePage;
     }
 
     @Override
@@ -133,6 +152,14 @@ public class AdminServiceImpl implements AdminService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ProjectNotFoundException("Task not found"));
         taskRepository.delete(task);
+    }
+
+    private UserInfoResponse mapToUserDto(UserEntity user) {
+        return UserInfoResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
     }
 
     private TaskResponseDto mapToTaskDto(Task task) {
