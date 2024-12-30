@@ -28,8 +28,14 @@ public class AdminController {
     @GetMapping("/users")
     public ResponseEntity<UserResponsePage> getUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "6") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(adminService.getUsers(page, size));
+    }
+
+    @GetMapping("/user/{userId}/projects/{projectId}")
+    public ResponseEntity<ProjectResponseDto> getProject(@PathVariable("userId") Long userId,
+                                                         @PathVariable("projectId") Long projectId) {
+        return ResponseEntity.ok(adminService.getProject(projectId, userId));
     }
 
     @PostMapping("/user/{userId}/projects")
@@ -73,7 +79,9 @@ public class AdminController {
 
     @GetMapping("/user/{userId}/projects/{projectId}/tasks")
     public ResponseEntity<List<TaskResponseDto>> getTasksByProject(@PathVariable("userId") Long userId,
-                                                                   @PathVariable("projectId") Long projectId) {
+                                                                   @PathVariable("projectId") Long projectId,
+                                                                   @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                   @RequestParam(value = "size", defaultValue = "5") int size) {
         return ResponseEntity.ok(adminService.getTasksByProject(projectId, userId));
     }
 

@@ -48,6 +48,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public ProjectResponseDto getProject(Long projectId, Long userId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+        if (!project.getUser().getId().equals(userId)) {
+            throw new BelongingException("This project does not belong to the submitted user");
+        }
+        return mapToProjectDto(project);
+    }
+
+    @Override
     public ProjectResponseDto createProject(ProjectRequestDto project, UserEntity user) {
         Project projectEntity = Project.builder()
                 .name(project.getName())

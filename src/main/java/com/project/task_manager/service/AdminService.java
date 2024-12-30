@@ -8,6 +8,7 @@ import java.util.List;
 public interface AdminService {
     UserResponsePage getUsers(int page, int size);
 
+    ProjectResponseDto getProject(Long projectId, Long userId);
     ProjectResponseDto createProject(ProjectRequestDto project, UserEntity user);
     ProjectResponsePage getProjectsByUser(UserEntity user, int  page, int size);
     ProjectResponseDto updateProject(Long projectId, ProjectRequestDto project, Long userId);
