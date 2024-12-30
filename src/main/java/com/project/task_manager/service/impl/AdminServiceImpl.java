@@ -126,14 +126,24 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<TaskResponseDto> getTasksByProject(Long projectId, Long userId) {
+    public TaskResponsePage getTasksByProject(Long projectId, Long userId, int page, int size) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
         if (!project.getUser().getId().equals(userId)) {
             throw new BelongingException("This project does not belong to the submitted user");
         }
-        List<Task> tasks = taskRepository.findByProject(project);
-        return tasks.stream().map(this::mapToTaskDto).toList();
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<Task> tasks = taskRepository.findByProject(project, pageable);
+        List<TaskResponseDto> taskDtos = tasks.stream().map(this::mapToTaskDto).toList();
+
+        TaskResponsePage taskResponsePage = new TaskResponsePage();
+        taskResponsePage.setPage(tasks.getNumber());
+        taskResponsePage.setSize(tasks.getSize());
+        taskResponsePage.setTotalPages(tasks.getTotalPages());
+        taskResponsePage.setTotalElements(tasks.getTotalElements());
+        taskResponsePage.setLast(tasks.isLast());
+        taskResponsePage.setTasks(taskDtos);
+        return taskResponsePage;
     }
 
     @Override

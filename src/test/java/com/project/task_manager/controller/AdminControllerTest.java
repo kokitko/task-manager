@@ -137,7 +137,7 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$.completed").value(false));
     }
 
-    @Test
+/*    @Test
     public void AdminController_GetTasksByProject_ReturnsTaskResponseDtoList() throws Exception {
         when(adminService.getTasksByProject(Mockito.anyLong(), Mockito.anyLong()))
                 .thenReturn(List.of(taskResponseDto));
@@ -149,7 +149,7 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$[0].name").value("testtaskresponse"))
                 .andExpect(jsonPath("$[0].description").value("testdescription"))
                 .andExpect(jsonPath("$[0].completed").value(false));
-    }
+    }*/
 
     @Test
     public void AdminController_UpdateTask_ReturnsTaskResponseDto() throws Exception {

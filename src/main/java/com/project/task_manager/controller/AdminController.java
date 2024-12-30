@@ -78,11 +78,11 @@ public class AdminController {
     }
 
     @GetMapping("/user/{userId}/projects/{projectId}/tasks")
-    public ResponseEntity<List<TaskResponseDto>> getTasksByProject(@PathVariable("userId") Long userId,
+    public ResponseEntity<TaskResponsePage> getTasksByProject(@PathVariable("userId") Long userId,
                                                                    @PathVariable("projectId") Long projectId,
                                                                    @RequestParam(value = "page", defaultValue = "0") int page,
                                                                    @RequestParam(value = "size", defaultValue = "5") int size) {
-        return ResponseEntity.ok(adminService.getTasksByProject(projectId, userId));
+        return ResponseEntity.ok(adminService.getTasksByProject(projectId, userId, page, size));
     }
 
     @PutMapping("/user/{userId}/projects/{projectId}/tasks/{taskId}")

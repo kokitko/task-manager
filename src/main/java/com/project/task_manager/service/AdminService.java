@@ -3,8 +3,6 @@ package com.project.task_manager.service;
 import com.project.task_manager.dto.*;
 import com.project.task_manager.entity.UserEntity;
 
-import java.util.List;
-
 public interface AdminService {
     UserResponsePage getUsers(int page, int size);
 
@@ -15,7 +13,7 @@ public interface AdminService {
     void deleteProject(Long projectId, Long userId);
 
     TaskResponseDto createTask(TaskRequestDto task, Long projectId, Long userId);
-    List<TaskResponseDto> getTasksByProject(Long projectId, Long userId);
+    TaskResponsePage getTasksByProject(Long projectId, Long userId, int page, int size);
     TaskResponseDto updateTask(Long taskId, TaskRequestDto task, Long projectId, Long userId);
     void deleteTask(Long taskId, Long projectId, Long userId);
 }
