@@ -126,6 +126,18 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public TaskResponseDto getTask(Long taskId, Long projectId, Long userId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+        if (!project.getUser().getId().equals(userId)) {
+            throw new BelongingException("This project does not belong to the submitted user");
+        }
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ProjectNotFoundException("Task not found"));
+        return mapToTaskDto(task);
+    }
+
+    @Override
     public TaskResponsePage getTasksByProject(Long projectId, Long userId, int page, int size) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));

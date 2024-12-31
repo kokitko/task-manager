@@ -13,6 +13,7 @@ public interface AdminService {
     void deleteProject(Long projectId, Long userId);
 
     TaskResponseDto createTask(TaskRequestDto task, Long projectId, Long userId);
+    TaskResponseDto getTask(Long taskId, Long projectId, Long userId);
     TaskResponsePage getTasksByProject(Long projectId, Long userId, int page, int size);
     TaskResponseDto updateTask(Long taskId, TaskRequestDto task, Long projectId, Long userId);
     void deleteTask(Long taskId, Long projectId, Long userId);
