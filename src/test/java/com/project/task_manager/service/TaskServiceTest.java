@@ -2,6 +2,7 @@ package com.project.task_manager.service;
 
 import com.project.task_manager.dto.TaskRequestDto;
 import com.project.task_manager.dto.TaskResponseDto;
+import com.project.task_manager.dto.TaskResponsePage;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.Task;
 import com.project.task_manager.entity.UserEntity;
@@ -16,6 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -81,15 +85,19 @@ public class TaskServiceTest {
         Assertions.assertThat(taskResponseDto.getName()).isEqualTo(task.getName());
     }
 
-/*    @Test
-    public void TaskService_GetTasksByProjectId_ReturnsTaskResponseDtoList() {
+    @Test
+    public void TaskService_GetTasksByProjectId_ReturnsTaskResponsePage() {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
+        PageImpl<Task> page = new PageImpl<>(List.of(task));
+        when(taskRepository.findByProject(Mockito.any(Project.class), Mockito.any(Pageable.class)))
+                .thenReturn(page);
 
-        when(taskRepository.findByProject(Mockito.any(Project.class))).thenReturn(List.of(task));
+        Pageable pageable = Pageable.ofSize(1).withPage(0);
+        TaskResponsePage taskResponsePage = taskService.getTasksByProjectId(project.getId(), 0, 1);
 
-        List<TaskResponseDto> list = taskService.getTasksByProjectId(project.getId());
-        Assertions.assertThat(list.get(0).getName()).isEqualTo(task.getName());
-    }*/
+        Assertions.assertThat(taskResponsePage.getTasks().get(0).getName()).isEqualTo(task.getName());
+        Assertions.assertThat(taskResponsePage.getTotalPages()).isEqualTo(page.getTotalPages());
+    }
 
     @Test
     public void TaskService_UpdateTask_ReturnsTaskResponseDto() {

@@ -1,9 +1,6 @@
 package com.project.task_manager.service;
 
-import com.project.task_manager.dto.ProjectRequestDto;
-import com.project.task_manager.dto.ProjectResponseDto;
-import com.project.task_manager.dto.TaskRequestDto;
-import com.project.task_manager.dto.TaskResponseDto;
+import com.project.task_manager.dto.*;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.Task;
 import com.project.task_manager.entity.UserEntity;
@@ -18,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -106,14 +105,20 @@ public class AdminServiceTest {
         Assertions.assertThat(taskResponseDto.getName()).isEqualTo(task.getName());
     }
 
-/*    @Test
-    public void AdminService_GetTasksByProject_ReturnsTaskResponseDtoList() {
+    @Test
+    public void AdminService_GetTasksByProject_ReturnsTaskResponsePage() {
         when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(project));
-        when(taskRepository.findByProject(Mockito.any(Project.class))).thenReturn(List.of(task));
+        PageImpl<Task> page = new PageImpl<>(List.of(task));
+        when(taskRepository.findByProject(Mockito.any(Project.class), Mockito.any(Pageable.class)))
+                .thenReturn(page);
 
-        List<TaskResponseDto> taskResponseDtoList = adminService.getTasksByProject(project.getId(), user.getId());
-        Assertions.assertThat(taskResponseDtoList).hasSize(1);
-    }*/
+        Pageable pageable = Pageable.ofSize(1).withPage(0);
+        TaskResponsePage taskResponsePage = adminService
+                .getTasksByProject(project.getId(), 1L, 0, 1);
+
+        Assertions.assertThat(taskResponsePage.getTasks().get(0).getName()).isEqualTo(task.getName());
+        Assertions.assertThat(taskResponsePage.getTotalPages()).isEqualTo(page.getTotalPages());
+    }
 
     @Test
     public void AdminService_UpdateTask_ReturnsTaskResponseDto() {
