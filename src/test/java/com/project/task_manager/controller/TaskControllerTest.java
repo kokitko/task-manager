@@ -3,11 +3,13 @@ package com.project.task_manager.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.task_manager.dto.TaskRequestDto;
 import com.project.task_manager.dto.TaskResponseDto;
+import com.project.task_manager.dto.TaskResponsePage;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.service.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -70,15 +72,19 @@ public class TaskControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("testtaskresponse"));
     }
 
-/*    @Test
-    public void TaskController_GetTasksByProject_ReturnsTaskResponseDtoList() throws Exception {
-        when(taskService.getTasksByProjectId(any(Long.class))).thenReturn(List.of(taskResponseDto));
+    @Test
+    public void TaskController_GetTasksByProject_ReturnsTaskResponsePage() throws Exception {
+        TaskResponsePage taskResponsePage = new TaskResponsePage();
+        taskResponsePage.setTasks(List.of(taskResponseDto));
+        when(taskService.getTasksByProjectId(Mockito.anyLong(),
+                Mockito.anyInt(), Mockito.anyInt())).thenReturn(taskResponsePage);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/project/1")
                     .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("testtaskresponse"));
-    }*/
+                .andExpect(MockMvcResultMatchers.jsonPath("$.tasks[0].name")
+                        .value("testtaskresponse"));
+    }
 
     @Test
     public void TaskController_UpdateTask_ReturnsTaskResponseDto() throws Exception {

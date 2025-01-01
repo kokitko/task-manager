@@ -136,19 +136,21 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$.completed").value(false));
     }
 
-/*    @Test
-    public void AdminController_GetTasksByProject_ReturnsTaskResponseDtoList() throws Exception {
-        when(adminService.getTasksByProject(Mockito.anyLong(), Mockito.anyLong()))
-                .thenReturn(List.of(taskResponseDto));
+    @Test
+    public void AdminController_GetTasksByProject_ReturnsTaskResponsePage() throws Exception {
+        TaskResponsePage taskResponsePage = new TaskResponsePage();
+        taskResponsePage.setTasks(List.of(taskResponseDto));
+        when(adminService.getTasksByProject(Mockito.anyLong(), Mockito.anyLong(),
+                Mockito.anyInt(), Mockito.anyInt())).thenReturn(taskResponsePage);
 
         mockMvc.perform(get("/api/admin/user/1/projects/1/tasks")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(taskRequestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("testtaskresponse"))
-                .andExpect(jsonPath("$[0].description").value("testdescription"))
-                .andExpect(jsonPath("$[0].completed").value(false));
-    }*/
+                .andExpect(jsonPath("$.tasks[0].name").value("testtaskresponse"))
+                .andExpect(jsonPath("$.tasks[0].description").value("testdescription"))
+                .andExpect(jsonPath("$.tasks[0].completed").value(false));
+    }
 
     @Test
     public void AdminController_UpdateTask_ReturnsTaskResponseDto() throws Exception {
