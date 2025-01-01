@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -57,6 +59,17 @@ public class TaskRepositoryTest {
 
         Assertions.assertThat(list).isNotNull();
         Assertions.assertThat(list.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void TaskRepository_FindByProject_ReturnsPage() {
+        taskRepository.saveAll(List.of(task1, task2));
+        Pageable pageable = Pageable.ofSize(2).withPage(0);
+
+        Page<Task> page = taskRepository.findByProject(project1, pageable);
+
+        Assertions.assertThat(page).isNotNull();
+        Assertions.assertThat(page.getTotalElements()).isEqualTo(2);
     }
 
     @Test
