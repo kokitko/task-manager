@@ -71,13 +71,18 @@ public class AdminServiceTest {
         Assertions.assertThat(projectResponseDto.getName()).isEqualTo(project.getName());
     }
 
-/*    @Test
-    public void AdminService_GetProjectsByUser_ReturnsProjectResponseDtoList() {
-        when(projectRepository.findByUser(Mockito.any(UserEntity.class))).thenReturn(List.of(project));
+    @Test
+    public void AdminService_GetProjectsByUser_ReturnsProjectResponsePage() {
+        PageImpl<Project> page = new PageImpl<>(List.of(project));
+        when(projectRepository.findByUser(Mockito.any(UserEntity.class),
+                Mockito.any(Pageable.class))).thenReturn(page);
 
-        List<ProjectResponseDto> projectResponseDtoList = adminService.getProjectsByUser(user);
-        Assertions.assertThat(projectResponseDtoList).hasSize(1);
-    }*/
+        Pageable pageable = Pageable.ofSize(1).withPage(0);
+        ProjectResponsePage projectResponsePage = adminService.getProjectsByUser(user, 0, 1);
+
+        Assertions.assertThat(projectResponsePage.getProjects().get(0).getName()).isEqualTo(project.getName());
+        Assertions.assertThat(projectResponsePage.getTotalPages()).isEqualTo(page.getTotalPages());
+    }
 
     @Test
     public void AdminService_UpdateProject_ReturnsProjectResponseDto() {

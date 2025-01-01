@@ -2,6 +2,7 @@ package com.project.task_manager.service;
 
 import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
+import com.project.task_manager.dto.ProjectResponsePage;
 import com.project.task_manager.entity.Project;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.repository.ProjectRepository;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,13 +64,14 @@ public class ProjectServiceTest {
         Assertions.assertThat(projectResponseDto.getName()).isEqualTo(project.getName());
     }
 
-/*    @Test
-    public void ProjectService_GetProjectsByUser_ReturnsProjectResponseDtoList() {
-        when(projectRepository.findByUser(Mockito.any(UserEntity.class))).thenReturn(List.of(project));
+    @Test
+    public void ProjectService_GetProjectsByUser_ReturnsProjectResponsePage() {
+        PageImpl<Project> projects = new PageImpl<>(List.of(project));
+        when(projectRepository.findByUser(Mockito.any(UserEntity.class), Mockito.any())).thenReturn(projects);
 
-        List<ProjectResponseDto> list = projectService.getProjectsByUser(user);
-        Assertions.assertThat(list.get(0).getName()).isEqualTo(project.getName());
-    }*/
+        ProjectResponsePage projectResponsePage = projectService.getProjectsByUser(user, 0, 1);
+        Assertions.assertThat(projectResponsePage.getProjects().get(0).getName()).isEqualTo(project.getName());
+    }
 
     @Test
     public void ProjectService_UpdateProject_ReturnsProjectResponseDto() {
