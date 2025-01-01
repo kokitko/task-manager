@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -20,12 +22,29 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     UserEntity user = new UserEntity();
+    UserEntity user2 = new UserEntity();
 
     @BeforeEach
     public void init() {
         user.setUsername("testusername");
         user.setEmail("testemail");
         user.setPassword("testpassword");
+
+        user2.setUsername("testusername2");
+        user2.setEmail("testemail2");
+        user2.setPassword("testpassword2");
+    }
+
+    @Test
+    public void UserRepository_FindAllUsers_ReturnsAllUsers() {
+        userRepository.save(user);
+        userRepository.save(user2);
+        Pageable pageable = Pageable.ofSize(2).withPage(0);
+
+        Page<UserEntity> users = userRepository.findAll(pageable);
+
+        Assertions.assertThat(users).isNotNull();
+        Assertions.assertThat(users.getTotalElements()).isEqualTo(2);
     }
 
     @Test
