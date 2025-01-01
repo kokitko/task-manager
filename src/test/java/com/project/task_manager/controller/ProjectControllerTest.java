@@ -3,6 +3,7 @@ package com.project.task_manager.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.task_manager.dto.ProjectRequestDto;
 import com.project.task_manager.dto.ProjectResponseDto;
+import com.project.task_manager.dto.ProjectResponsePage;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.ProjectService;
@@ -82,17 +83,19 @@ public class ProjectControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(projectResponseDto.getName()));
     }
 
-/*    @Test
-    public void ProjectController_GetUserProjects_ReturnsProjectResponseDtoList() throws Exception {
-        when(projectService.getProjectsByUser(any(UserEntity.class)))
-                .thenReturn(List.of(projectResponseDto));
+    @Test
+    public void ProjectController_GetUserProjects_ReturnsProjectResponsePage() throws Exception {
+        ProjectResponsePage projectResponsePage = new ProjectResponsePage();
+        projectResponsePage.setProjects(List.of(projectResponseDto));
+        when(projectService.getProjectsByUser(any(UserEntity.class), any(Integer.class), any(Integer.class)))
+                .thenReturn(projectResponsePage);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/projects")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(projectResponseDto.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(projectResponseDto.getName()));
-    }*/
+                .andExpect(MockMvcResultMatchers.jsonPath("$.projects[0].id").value(projectResponseDto.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.projects[0].name").value(projectResponseDto.getName()));
+    }
 
     @Test
     public void ProjectController_UpdateProject_ReturnsProjectResponseDto() throws Exception {

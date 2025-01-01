@@ -1,10 +1,7 @@
 package com.project.task_manager.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.task_manager.dto.ProjectRequestDto;
-import com.project.task_manager.dto.ProjectResponseDto;
-import com.project.task_manager.dto.TaskRequestDto;
-import com.project.task_manager.dto.TaskResponseDto;
+import com.project.task_manager.dto.*;
 import com.project.task_manager.entity.UserEntity;
 import com.project.task_manager.repository.UserRepository;
 import com.project.task_manager.service.AdminService;
@@ -87,19 +84,21 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$.description").value("testdescription"));
     }
 
-/*    @Test
-    public void AdminController_GetProjectsByUser_ReturnsProjectResponseDtoList() throws Exception {
+    @Test
+    public void AdminController_GetProjectsByUser_ReturnsProjectResponsePage() throws Exception {
         when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
-        when(adminService.getProjectsByUser(Mockito.any(UserEntity.class)))
-                .thenReturn(List.of(projectResponseDto));
+        ProjectResponsePage projectResponsePage = new ProjectResponsePage();
+        projectResponsePage.setProjects(List.of(projectResponseDto));
+        when(adminService.getProjectsByUser(Mockito.any(UserEntity.class), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(projectResponsePage);
 
         mockMvc.perform(get("/api/admin/user/1/projects")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(projectRequestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("testprojectresponse"))
-                .andExpect(jsonPath("$[0].description").value("testdescription"));
-    }*/
+                .andExpect(jsonPath("$.projects[0].name").value("testprojectresponse"))
+                .andExpect(jsonPath("$.projects[0].description").value("testdescription"));
+    }
 
     @Test
     public void AdminController_UpdateProject_ReturnsProjectResponseDto() throws Exception {
