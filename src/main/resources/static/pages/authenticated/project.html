@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../../styles/newstyles.css">
+        <title>Project Details - Task Manager</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <span id="username-display"></span>
+                <button id="logout-button" class="btn red-btn">Logout</button>
+            </div>
+            <div class="columns">
+                <div class="left-column">
+                    <h2>Tasks</h2>
+                    <ul id="tasks-list" class="tasks-list"></ul>
+                    <div class="pagination">
+                        <button id="prev-page" class="btn blue-btn">Previous</button>
+                        <button id="next-page" class="btn blue-btn">Next</button>
+                    </div>
+                    <a id="create-task-button"><button class="btn green-btn">Create Task</button></a>
+                </div>
+                <div class="right-column">
+                    <h1 id="project-name">Project Name</h1>
+                    <p id="project-description" class="project-description">Project Description</p>
+                    <div class="button-group">
+                        <a id="edit-project-button"><button id="edit-project-button" class="btn green-btn">Edit Project</button></a>
+                        <button id="delete-project-button" class="btn red-btn">Delete Project</button>
+                    </div>
+                </div>
+            </div>
+            <a href="menu.html">
+                <button id="go-back-button" class="btn go-back-btn">Go back</button>
+            </a>
+        </div>
+        <script src="../../scripts/auth.js"></script>
+        <script src="../../scripts/project.js"></script>
+    </body>
+</html>

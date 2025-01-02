@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../../../styles/newstyles.css">
+        <title>User - Task Manager</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <span id="username-display"></span>
+                <button id="logout-button" class="btn red-btn">Logout</button>
+            </div>
+            <div id="projects-container" class="projects-container">
+                <h2>Projects</h2>
+                <ul id="projects-list"></ul>
+                <div class="pagination">
+                    <button id="prev-page" class="btn blue-btn">Previous</button>
+                    <button id="next-page" class="btn blue-btn">Next</button>
+                </div>
+                <a href="create-project.html" class="create-project-link" id="create-project-link">
+                    <button class="btn green-btn">Create Project</button>
+                </a>
+                <a href="menu.html" class="back-link">
+                    <button class="btn admin-back-btn">Back</button>
+                </a>
+            </div>
+        </div>
+        <script src="../../../scripts/admin/auth.js"></script>
+        <script src="../../../scripts/admin/user.js"></script>
+    </body>
+</html>

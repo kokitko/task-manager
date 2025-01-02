@@ -1,0 +1,506 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+    height: 100vh; /* Ensure body takes full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease-in-out; /* Add fade-in animation */
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../graphics/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    filter: blur(5px);
+    z-index: -1;
+}
+
+.container {
+    gap: 10px;
+    width: 75%;
+    height: 80%;
+    min-width: 600px;
+    min-height: 600px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 40px;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+.container__h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    margin-top: 0;
+    position: relative;
+    top: 10px;
+}
+
+.container__p {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+/* BUTTONS */
+.button-group {
+    display: flex;
+    gap: 20px;
+}
+
+.btn {
+    font-size: 1em;
+    height: 35px;
+    width: 90px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 4px;
+    border: none;
+    box-shadow:0 4px 8px rgba(0, 0, 0, 0.1)
+}
+
+.admin-btn {
+    background-color: #f44336;
+    color: white;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+#unauth-go-back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.btn:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.green-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.green-btn:hover {
+    background-color: #45a049;
+}
+
+.blue-btn {
+    background-color: #008CBA;
+    color: white;
+}
+
+.blue-btn:hover {
+    background-color: #007bb5;
+}
+
+p a, a:hover, a:visited {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* */
+
+.login-form {
+    min-height: 250px;
+    min-width: 300px;
+    height: 40%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    min-height: 350px;
+    min-width: 300px;
+    height: 50%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form .btn {
+    width: 80%;
+}
+
+.form-group {
+    align-items: flex-start;
+    width: 80%;
+    font-size: 1.2em;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    padding: 5px;
+}
+
+.login-form .btn {
+    width: 80%;
+}
+
+.header {
+    position: absolute;
+    top: 15px;
+    right: 15px; 
+}
+
+.red-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.projects-container {
+    min-height: 400px;
+    min-width: 360px;
+    width: 60%;
+    flex-direction: column;
+    display: flex;
+    gap: 20px;
+}
+
+.projects-container ul {
+    width: 100%;
+    min-height: 200px;
+    max-height: 400px;
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.clickable {
+    cursor: pointer;
+    background-color: whitesmoke;
+    width: 150px;
+    height: 100px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    padding: 10px;
+    transition: 0.3s ease;
+}
+
+.users-container {
+    min-height: 400px;
+    min-width: 360px;
+    width: 60%;
+    flex-direction: column;
+    display: flex;
+    gap: 20px;
+}
+
+.users-container ul {
+    width: 100%;
+    min-height: 300px;
+    max-height: 400px;
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.users-container ul .clickable {
+    color: black;
+    text-decoration: none;
+    width: 100px;
+    height: 100px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+.clickable:hover {
+    scale: 1.05;
+}
+
+#projects-list a {
+    text-decoration: none;
+    color: black;
+}
+
+.admin-back-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.pagination {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.create-project-link {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.create-project-link .btn {
+    width: 130px;
+}
+
+.go-back-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.project-form {
+    min-height: 250px;
+    min-width: 300px;
+    width: 35%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-field {
+    padding: 5px;
+    font-size: 1em;
+    height: 30px;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+#project-description-input {
+    font-size: 1em;
+    height: 90px;
+    padding: 5px;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-content: flex-start;
+    resize: none;
+}
+
+#create-project {
+    width: 80%;
+}
+
+#save-changes {
+    width: 80%;
+}
+
+.columns {
+    display: flex;
+    min-height: 450px;
+    width: 100%;
+    height: 80%;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-column {
+    background-color: whitesmoke;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 35%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.tasks-list {
+    width: 100%;
+    height: 70%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style-type: none;
+}
+
+.tasks-list a {
+    cursor: pointer;
+    background-color: whitesmoke;
+    width: 150px;
+    width: 80%;
+    height: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    padding: 10px;
+    transition: 0.3s ease;
+    text-decoration: none;
+    color: black;
+}
+
+.right-column {
+    background-color: whitesmoke;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 65%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-column .button-group .btn {
+    width: 110px;
+} 
+
+.project-description {
+    font-size: 2em;
+    width: 80%;
+    height: 70%;
+    align-content: center;
+    justify-content: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+#create-task-button {
+    width: 110px;
+    margin-left: auto;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-task-form {
+    min-width: 250px;
+    width: 35%;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#submit-task {
+    width: 80%;
+}
+
+.edit-task-form {
+    min-width: 250px;
+    width: 35%;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-task-form .btn {
+    width: 80%;
+}
+
+.edit-task-form textarea {
+    height: 120px;
+    resize: none;
+    background-color: whitesmoke;
+}
+
+.task-description {
+    font-size: 1.2em;
+    min-width: 600px;
+    width: 70%;
+    height: 50%;
+    align-content: center;
+    justify-content: center;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

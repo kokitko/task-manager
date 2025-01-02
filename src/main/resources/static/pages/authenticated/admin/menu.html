@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../../../styles/newstyles.css">
+        <title>Admin panel - Task Manager</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <span id="username-display"></span>
+                <button id="logout-button" class="btn red-btn">Logout</button>
+            </div>
+            <h1 class="container__h1">Admin panel</h1>
+            <div id="users-container" class="users-container">
+                <h2>Users</h2>
+                <ul id="users-list"></ul>
+                <div class="pagination">
+                    <button id="prev-page" class="btn blue-btn">Previous</button>
+                    <button id="next-page" class="btn blue-btn">Next</button>
+                </div>
+            </div>
+            <a href="../menu.html">
+                <button class="btn go-back-btn">Go Back</button>
+            </a>
+        </div>
+        <script src="../../../scripts/admin/auth.js"></script>
+        <script src="../../../scripts/admin/menu.js"></script>
+    </body>
+</html>

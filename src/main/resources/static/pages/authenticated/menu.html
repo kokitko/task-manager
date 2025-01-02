@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../../styles/newstyles.css">
+        <title>Menu - Task Manager</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <span id="username-display"></span>
+                <button id="logout-button" class="btn red-btn">Logout</button>
+            </div>
+            <h1 class="container__h1">Welcome to the Task Manager</h1>
+            <div id="projects-container" class="projects-container">
+                <h2>Your Projects</h2>
+                <ul id="projects-list"></ul>
+                <div class="pagination">
+                    <button id="prev-page" class="btn blue-btn">Previous</button>
+                    <button id="next-page" class="btn blue-btn">Next</button>
+                </div>
+                <a href="create-project.html" class="create-project-link">
+                    <button class="btn green-btn">Create Project</button>
+                </a>
+            </div>
+            <a href="admin/menu.html" id="admin-panel-button">
+                <button class="btn admin-btn">Admin Panel</button>
+            </a>
+        </div>
+        <script src="../../scripts/auth.js"></script>
+        <script src="../../scripts/menu.js"></script>
+    </body>
+</html>
