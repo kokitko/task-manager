@@ -8,6 +8,9 @@ This is the back-end for an application that helps manage current projects and t
 - Spring Security with JWT
 - Hibernate
 - Maven
+- HTML
+- CSS
+- JavaScript
 
 ## Features
 - Handles most possible exceptions and sends them as `ResponseEntity`.
@@ -19,10 +22,14 @@ This is the back-end for an application that helps manage current projects and t
 - Maven 3.6.0 or higher
 
 ## Testing
-- Tested with Postman (no unit tests written for now)
+- Unit tests written for most of the code.
+- Tested with Postman.
 
 ## Usage
-Once the application is running, you can use Postman to interact with the API. The admin has the ability to manage users, tasks, and projects through the admin panel.
+1. Configure the database (or implement h2 db).
+2. Run the Spring Boot application.
+3. Use the pre-created admin user (username: admin, password: admin).
+4. Access the application by going to [http://localhost:8080](http://localhost:8080).
 
 ## API Endpoints
 Here are some of the main API endpoints:
